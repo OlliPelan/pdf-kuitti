@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Luo Kuitti</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body class="bg-gray-100 p-4 font-sans pb-10">
+
+    <div class="max-w-md mx-auto bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6">Uusi kuitti</h1>
+        
+        <div class="space-y-6">
+            
+            <!-- Kuitin perustiedot -->
+            <div class="p-4 bg-gray-50 rounded-xl border border-gray-100 space-y-4 shadow-sm w-full">
+                <h2 class="text-xs font-bold text-blue-600 uppercase tracking-wider">Kuitin perustiedot</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Kuitin numero</label>
+                        <input type="number" id="kuitin_numero" value="1001" class="w-full bg-white border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 font-bold text-gray-800">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Maksutapa</label>
+                        <select id="maksutapa" class="w-full bg-white border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                            <option value="Korttimaksu">Korttimaksu</option>
+                            <option value="Käteinen">Käteinen</option>
+                            <option value="MobilePay">MobilePay</option>
+                            <option value="Tilisiirto">Tilisiirto</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Myyjän tiedot -->
+            <div class="p-4 bg-gray-50 rounded-xl border border-gray-100 space-y-4">
+                <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider">Myyjän tiedot</h2>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Yrityksen / Myyjän nimi</label>
+                    <input type="text" id="myyja" class="w-full bg-white border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="Oma Yritys Oy">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Katuosoite ja postitoimipaikka</label>
+                    <input type="text" id="myyja_osoite" class="w-full bg-white border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="Esim. Esimerkkitie 1, 00100 Helsinki">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Y-tunnus (Pakollinen kuitissa)</label>
+                    <input type="text" id="myyja_ytunnus" class="w-full bg-white border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="1234567-8">
+                </div>
+            </div>
+
+            <!-- Ostajan tiedot -->
+            <div class="p-4 bg-gray-50 rounded-xl border border-gray-100 space-y-4">
+                <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider">Ostajan tiedot (Valinnainen)</h2>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Ostajan nimi</label>
+                    <input type="text" id="ostaja" class="w-full bg-white border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="Matti Meikäläinen">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Katuosoite ja postitoimipaikka</label>
+                    <input type="text" id="ostaja_osoite" class="w-full bg-white border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="Esim. Esimerkkitie 1, 00100 Helsinki">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Ostajan Y-tunnus</label>
+                    <input type="text" id="ostaja_ytunnus" class="w-full bg-white border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="9876543-2">
+                </div>
+            </div>
+
+            <!-- Tuotteet / Palvelut -->
+            <div class="p-4 bg-gray-50 rounded-xl border border-gray-100 space-y-4">
+                <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider">Myyty tuote tai palvelu</h2>
+                <div class="grid grid-cols-1 gap-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Tapahtuman pvm</label>
+                        <div class="flex w-full bg-[#FDF8EE] border border-gray-300 rounded-lg overflow-hidden focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500">
+                            <input type="date" id="tapahtuma_pvm" class="w-full min-w-0 bg-transparent px-3 py-2.5 outline-none border-0 appearance-none">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Kuvaus</label>
+                        <input type="text" id="kuvaus" class="w-full bg-white border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="Esim. Ikkunoiden pesu">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 pt-2">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Veroton hinta (€)</label>
+                        <input type="number" id="hinta" class="w-full bg-white border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="150">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">ALV %</label>
+                        <select id="alv_prosentti" class="w-full bg-white border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                            <option value="25.5">25,5 %</option>
+                            <option value="13.5">13,5 %</option>
+                            <option value="10">10 %</option>
+                            <option value="0">0 %</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="luoPDF()" class="w-full bg-blue-600 text-white font-bold text-lg rounded-xl p-4 mt-2 hover:bg-blue-700 active:bg-blue-800 transition shadow-md">
+                Luo PDF ja lataa
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const today = new Date();
+            const formatDateForInput = (date) => date.toISOString().split('T')[0];
+            document.getElementById('tapahtuma_pvm').value = formatDateForInput(today);
+        });
+
+        function muotoilePvmSuomeksi(dateString) {
+            if (!dateString) return "";
+            const [year, month, day] = dateString.split('-');
+            return `${day}.${month}.${year}`;
+        }
+
+        function getTanaan() {
+            const date = new Date();
+            return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
+        }
+
+        function luoPDF() {
+            // --- VALIDOINTI ALKAA ---
+            const m_yt_input = document.getElementById('myyja_ytunnus').value.trim();
+            const o_yt_input = document.getElementById('ostaja_ytunnus').value.trim();
+            const ytRegex = /^\d{7}-\d$/;
+
+            if (m_yt_input && !ytRegex.test(m_yt_input)) {
+                alert("Myyjän Y-tunnus on virheellinen.\nOikea muoto on esim. 1234567-8");
+                return;
+            }
+            if (o_yt_input && !ytRegex.test(o_yt_input)) {
+                alert("Ostajan Y-tunnus on virheellinen.\nOikea muoto on esim. 1234567-8");
+                return;
+            }
+            // --- VALIDOINTI LOPPUU ---
+
+            const kuitin_numero = document.getElementById('kuitin_numero').value || '1001';
+            const maksutapa = document.getElementById('maksutapa').value;
+
+            const myyja = document.getElementById('myyja').value || 'Oma Nimi / Yritys';
+            const myyja_osoite = document.getElementById('myyja_osoite').value;
+            const myyja_yt = m_yt_input;
+            
+            const ostaja = document.getElementById('ostaja').value || 'Käteisasiakas';
+            const ostaja_osoite = document.getElementById('ostaja_osoite').value;
+            const ostaja_yt = o_yt_input;
+            
+            const tapahtuma_pvm = muotoilePvmSuomeksi(document.getElementById('tapahtuma_pvm').value);
+            const kuvaus = document.getElementById('kuvaus').value || 'Ei kuvausta';
+            
+            const hinta = parseFloat(document.getElementById('hinta').value || 0);
+            const alvValintaStr = document.getElementById('alv_prosentti').value;
+            const alvProsentti = parseFloat(alvValintaStr);
+            
+            const alv = hinta * (alvProsentti / 100); 
+            const yhteensa = hinta + alv;
+            const muotoile = (summa) => summa.toFixed(2).replace('.', ',') + ' EUR';
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+
+            // OTSIKKO JA PÄIVÄMÄÄRÄT
+            doc.setFontSize(24);
+            doc.setTextColor(37, 99, 235);
+            doc.setFont("helvetica", "bold");
+            doc.text("KUITTI", 20, 30);
+
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
+            doc.setFont("helvetica", "normal");
+            doc.text(`Pvm: ${getTanaan()}`, 190, 23, { align: "right" });
+            doc.text(`Kuitin nro: ${kuitin_numero}`, 190, 29, { align: "right" });
+            doc.text(`Maksutapa: ${maksutapa}`, 190, 35, { align: "right" });
+
+            doc.setDrawColor(37, 99, 235);
+            doc.setLineWidth(0.5);
+            doc.line(20, 42, 190, 42);
+
+            // OSOITETIEDOT
+            doc.setFontSize(9);
+            doc.setTextColor(107, 114, 128);
+            doc.setFont("helvetica", "bold");
+            doc.text("MYYJÄ", 20, 52);
+            doc.text("OSTAJA", 105, 52);
+
+            doc.setFontSize(11);
+            doc.setTextColor(17, 24, 39);
+            
+            let lY = 58;
+            doc.text(myyja, 20, lY);
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            if (myyja_osoite) { lY += 5; doc.text(myyja_osoite, 20, lY); }
+            if (myyja_yt) { lY += 5; doc.text(`Y-tunnus: ${myyja_yt}`, 20, lY); }
+
+            let aY = 58;
+            doc.setFontSize(11);
+            doc.setFont("helvetica", "bold");
+            doc.text(ostaja, 105, aY);
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            if (ostaja_osoite) { aY += 5; doc.text(ostaja_osoite, 105, aY); }
+            if (ostaja_yt) { aY += 5; doc.text(`Y-tunnus: ${ostaja_yt}`, 105, aY); }
+
+            // TAULUKKO
+            doc.setFillColor(243, 244, 246);
+            doc.rect(20, 82, 170, 10, "F");
+            doc.setFont("helvetica", "bold");
+            doc.text("Pvm", 23, 89);
+            doc.text("Kuvaus", 50, 89);
+            doc.text("Veroton hinta", 187, 89, { align: "right" });
+
+            doc.setFont("helvetica", "normal");
+            if (tapahtuma_pvm) {
+                doc.text(tapahtuma_pvm, 23, 100);
+            }
+            doc.text(kuvaus, 50, 100);
+            doc.text(muotoile(hinta), 187, 100, { align: "right" });
+            
+            doc.setDrawColor(229, 231, 235);
+            doc.line(20, 106, 190, 106);
+
+            // SUMMAT
+            doc.setFontSize(11);
+            const alvOtsikko = `ALV (${alvValintaStr.replace('.', ',')} %):`;
+            doc.text(alvOtsikko, 130, 118);
+            doc.text(muotoile(alv), 187, 118, { align: "right" });
+
+            doc.setFontSize(14);
+            doc.setFont("helvetica", "bold");
+            doc.text("Maksettu:", 130, 128);
+            doc.text(muotoile(yhteensa), 187, 128, { align: "right" });
+            
+            doc.setDrawColor(37, 99, 235);
+            doc.line(130, 132, 190, 132);
+
+            // ALATUNNISTE
+            doc.setDrawColor(229, 231, 235);
+            doc.line(20, 270, 190, 270);
+            
+            doc.setFontSize(9);
+            doc.setFont("helvetica", "normal");
+            doc.setTextColor(107, 114, 128);
+            
+            doc.text(myyja, 20, 277);
+            if (myyja_yt) { doc.text(`Y-tunnus: ${myyja_yt}`, 20, 282); }
+            
+            doc.setFont("helvetica", "bold");
+            doc.text("Kiitos asioinnista!", 190, 282, { align: "right" });
+
+            const tiedostonimi = 'Kuitti_' + ostaja.replace(/\s+/g, '_') + '.pdf';
+            doc.save(tiedostonimi);
+        }
+    </script>
+</body>
+</html>
